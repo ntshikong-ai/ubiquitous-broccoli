@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test d'Excellence — By N.T</title>
+<style>
+  :root{
+    --bg:#f7f8fc;--bg2:#eef1f8;--card:#ffffff;--text:#1a2332;--muted:#6b7a90;
+    --accent:#1e40af;--accent2:#3b82f6;--accent-soft:#dbeafe;
+    --ok:#059669;--bad:#dc2626;--warn:#d97706;--gold:#b45309;
+    --border:#e2e8f0;--border2:#cbd5e1;
+    --shadow-sm:0 1px 3px rgba(15,23,42,.06);
+    --shadow:0 4px 16px rgba(15,23,42,.08);
+    --shadow-lg:0 12px 40px rgba(15,23,42,.12);
+    --radius:14px;--radius-lg:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
+    background:
+      radial-gradient(1000px 500px at 0% -10%,#e0e7ff 0%,transparent 55%),
+      radial-gradient(900px 500px at 100% 0%,#dbeafe 0%,transparent 50%),
+      linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
+    color:var(--text);min-height:100vh;display:flex;justify-content:center;
+    align-items:flex-start;padding:32px 20px;font-size:15.5px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  #app{width:100%;max-width:940px}
+  .screen{display:none;animation:fade .4s cubic-bezier(.22,.61,.36,1)}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ---------- CARD ---------- */
+  .card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius-lg);padding:36px 40px;
+    box-shadow:var(--shadow-lg);
+  }
+
+  /* ---------- LOGO / BADGES ---------- */
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+  .brand-mark{
+    width:44px;height:44px;border-radius:12px;flex-shrink:0;
+    background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+    display:flex;align-items:center;justify-content:center;color:#fff;
+    font-weight:800;font-size:18px;letter-spacing:-.5px;
+    box-shadow:0 6px 16px rgba(30,64,175,.28);
+  }
+  .brand-text{display:flex;flex-direction:column;line-height:1.25}
+  .brand-name{font-weight:700;font-size:15px;letter-spacing:.2px}
+  .brand-sub{font-size:12.5px;color:var(--muted);letter-spacing:.3px}
+  .level-pill{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--accent-soft);color:var(--accent);
+    padding:5px 12px;border-radius:999px;font-size:11.5px;
+    font-weight:700;letter-spacing:.9px;text-transform:uppercase;
+    margin-bottom:16px;
+  }
+  .level-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+
+  /* ---------- TYPO ---------- */
+  h1{font-size:30px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px;color:#0f172a}
+  h2{font-size:21px;font-weight:700;letter-spacing:-.2px;margin-bottom:16px}
+  h3{font-size:15px;font-weight:700;color:var(--accent);margin-bottom:10px;letter-spacing:.1px}
+  .subtitle{color:var(--muted);font-size:15px;margin-bottom:26px}
+
+  /* ---------- PRESENTATION ---------- */
+  .info-panel{
+    background:linear-gradient(180deg,#f8fafc 0%,#f1f5f9 100%);
+    border:1px solid var(--border);border-radius:var(--radius);
+    padding:22px 24px;margin-bottom:22px;
+  }
+  .info-panel p{color:#475569;font-size:14.5px;line-height:1.7;margin-bottom:12px}
+  .subject-list{list-style:none;display:grid;gap:8px;margin-bottom:14px}
+  .subject-list li{
+    display:flex;align-items:flex-start;gap:10px;padding:9px 12px;
+    background:#fff;border:1px solid var(--border);border-radius:10px;
+    font-size:14px;color:#334155;
+  }
+  .subject-list li::before{
+    content:"";flex-shrink:0;width:6px;height:6px;margin-top:8px;
+    border-radius:50%;background:var(--accent2);
+  }
+  .rule{font-size:13.5px;color:#475569;padding:6px 0;display:flex;gap:9px}
+  .rule .icon{color:var(--accent);flex-shrink:0;font-weight:700}
+
+  .wish{
+    text-align:center;font-size:15px;margin:24px 0 20px;
+    color:#1e40af;font-weight:500;padding:14px;
+    background:linear-gradient(90deg,#eff6ff,#dbeafe);border-radius:12px;
+    border:1px solid #bfdbfe;
+  }
+  .wish strong{color:var(--accent);font-weight:700}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    border:none;border-radius:11px;padding:14px 24px;
+    font-size:15px;font-weight:600;cursor:pointer;
+    transition:all .18s ease;font-family:inherit;letter-spacing:.1px;
+  }
+  .btn.primary{
+    background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+    color:#fff;box-shadow:0 4px 14px rgba(30,64,175,.28);
+  }
+  .btn.primary:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(30,64,175,.38)}
+  .btn.secondary{
+    background:#fff;color:var(--accent);border:1.5px solid var(--border2);
+  }
+  .btn.secondary:hover{background:#f8fafc;border-color:var(--accent)}
+  .btn.danger{background:var(--bad);color:#fff}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+  /* ---------- TEXT SCREEN ---------- */
+  .text-header{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:20px;gap:16px;flex-wrap:wrap;
+    padding-bottom:16px;border-bottom:1px solid var(--border);
+  }
+  .text-header h2{margin:0;font-size:19px}
+  .timer{
+    font-family:'JetBrains Mono','Courier New',monospace;font-weight:700;
+    font-size:15px;background:#f1f5f9;border:1px solid var(--border);
+    padding:9px 16px;border-radius:10px;color:var(--accent);
+    min-width:88px;text-align:center;letter-spacing:.5px;
+  }
+  .timer.danger{color:var(--bad);border-color:#fecaca;background:#fef2f2;animation:pulse 1.2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
+  .text-content{
+    background:#fcfdff;border:1px solid var(--border);border-radius:var(--radius);
+    padding:28px 32px;max-height:62vh;overflow-y:auto;
+    line-height:1.95;color:#334155;font-size:15px;
+  }
+  .text-content p{margin-bottom:18px;text-align:justify;text-indent:1.5em}
+  .text-content p:first-child{text-indent:0}
+  .text-content::-webkit-scrollbar{width:8px}
+  .text-content::-webkit-scrollbar-track{background:#f1f5f9;border-radius:8px}
+  .text-content::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:8px}
+  .text-actions{margin-top:20px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+  /* ---------- QUIZ ---------- */
+  .quiz-header{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:16px;gap:14px;flex-wrap:wrap;
+  }
+  .section-info{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .section-badge{
+    background:linear-gradient(135deg,var(--accent-soft),#eff6ff);
+    color:var(--accent);padding:6px 14px;border-radius:999px;
+    font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+    border:1px solid #bfdbfe;
+  }
+  .progress-text{color:var(--muted);font-size:13.5px;font-weight:500}
+
+  .progress-bar{height:5px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:24px}
+  .progress-fill{
+    height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+    transition:width .4s cubic-bezier(.22,.61,.36,1);border-radius:999px;
+  }
+
+  .question{
+    font-size:17px;line-height:1.65;margin-bottom:24px;font-weight:600;
+    padding:20px 22px;background:linear-gradient(180deg,#f8fafc,#f1f5f9);
+    border-left:4px solid var(--accent);border-radius:12px;color:#0f172a;
+    letter-spacing:-.1px;
+  }
+  .options{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+  .option{
+    background:#fff;border:1.5px solid var(--border);color:var(--text);
+    padding:15px 20px;border-radius:12px;text-align:left;font-size:15px;
+    cursor:pointer;transition:all .15s ease;font-family:inherit;line-height:1.55;
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .option .letter{
+    font-weight:700;color:var(--accent);flex-shrink:0;min-width:20px;
+  }
+  .option:hover{background:#f8fafc;border-color:var(--accent2);transform:translateX(2px)}
+  .option.selected{
+    background:linear-gradient(135deg,#eff6ff,#dbeafe);
+    border-color:var(--accent);color:#0f172a;
+    box-shadow:0 4px 12px rgba(30,64,175,.14);
+  }
+  .option.selected .letter{color:var(--accent)}
+  .quiz-actions{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+  /* ---------- MODAL ---------- */
+  .modal{
+    display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);
+    backdrop-filter:blur(4px);z-index:100;align-items:center;
+    justify-content:center;padding:24px;
+  }
+  .modal.open{display:flex;animation:fade .25s ease}
+  .modal-content{
+    background:var(--card);border-radius:var(--radius-lg);
+    width:100%;max-width:820px;max-height:88vh;display:flex;flex-direction:column;
+    box-shadow:0 24px 60px rgba(0,0,0,.3);
+  }
+  .modal-header{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:20px 26px;border-bottom:1px solid var(--border);gap:14px;
+  }
+  .modal-header h3{margin:0;color:var(--text);font-size:16px;font-weight:700}
+  .modal-body{
+    padding:26px 30px;overflow-y:auto;line-height:1.9;
+    color:#334155;font-size:14.8px;
+  }
+  .modal-body p{margin-bottom:16px;text-align:justify}
+  .btn-close{
+    background:transparent;border:none;color:var(--muted);
+    font-size:22px;cursor:pointer;padding:4px 12px;border-radius:8px;
+    transition:.15s;line-height:1;
+  }
+  .btn-close:hover{background:#f1f5f9;color:var(--text)}
+
+  /* ---------- RESULTS ---------- */
+  .results-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:14px;margin-bottom:24px;
+  }
+  .result-card{
+    background:linear-gradient(180deg,#fff,#f8fafc);
+    border:1px solid var(--border);border-radius:14px;padding:20px;
+    text-align:center;transition:.2s;
+  }
+  .result-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+  .result-card h3{color:var(--accent);font-size:12px;margin-bottom:10px;
+    letter-spacing:1px;text-transform:uppercase;font-weight:700}
+  .result-score{font-size:26px;font-weight:800;color:#0f172a;letter-spacing:-.5px}
+  .result-pct{color:var(--muted);margin-top:4px;font-size:13px;font-weight:600}
+
+  .total-result{
+    background:linear-gradient(135deg,#1e40af 0%,#3b82f6 100%);
+    border-radius:16px;padding:28px;text-align:center;margin-bottom:28px;
+    box-shadow:0 12px 32px rgba(30,64,175,.28);
+  }
+  .total-result h3{color:#bfdbfe;letter-spacing:1.5px;font-size:12px;
+    text-transform:uppercase;margin-bottom:10px;font-weight:700}
+  .total-score{font-size:44px;font-weight:800;color:#fff;letter-spacing:-1.5px;line-height:1}
+  .total-pct{font-size:20px;color:#dbeafe;font-weight:700;margin-top:8px}
+
+  .errors-list{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+  .error-item{
+    background:#fef2f2;border:1px solid #fecaca;
+    border-left:4px solid var(--bad);border-radius:12px;padding:16px 18px;
+  }
+  .error-header{display:flex;justify-content:space-between;margin-bottom:10px;gap:10px}
+  .error-section{
+    font-size:11px;color:var(--bad);font-weight:800;
+    text-transform:uppercase;letter-spacing:.8px;
+  }
+  .error-num{font-size:12px;color:var(--muted);font-weight:600}
+  .error-question{font-weight:600;margin-bottom:10px;line-height:1.55;color:#0f172a;font-size:14.5px}
+  .error-answer{display:flex;flex-direction:column;gap:5px;font-size:13.5px}
+  .error-answer .given{color:#b91c1c}
+  .error-answer .correct{color:#047857;font-weight:600}
+  .no-errors{
+    text-align:center;padding:36px 20px;color:var(--ok);
+    font-size:16px;font-weight:600;
+    background:#ecfdf5;border:1px solid #a7f3d0;border-radius:14px;
+  }
+
+  /* ---------- CHEAT ---------- */
+  .cheat-card{text-align:center;border-color:#fecaca;background:#fef2f2}
+  .cheat-card h2{color:var(--bad);font-size:22px;margin-bottom:16px}
+  .cheat-card p{color:#7f1d1d;line-height:1.7;margin-bottom:10px;font-size:15px}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:640px){
+    body{padding:16px 12px;font-size:15px}
+    .card{padding:24px 22px;border-radius:16px}
+    h1{font-size:23px}
+    h2{font-size:18px}
+    .question{font-size:15.5px;padding:16px}
+    .option{font-size:14.5px;padding:13px 16px}
+    .timer{font-size:13.5px;padding:7px 12px}
+    .text-content{padding:20px}
+    .total-score{font-size:36px}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ HOME ============ -->
+  <div id="screen-home" class="screen active">
+    <div class="card">
+      <div class="brand">
+        <div class="brand-mark">NT</div>
+        <div class="brand-text">
+          <span class="brand-name">By N.T</span>
+          <span class="brand-sub">Test d'Excellence — Programme Lona</span>
+        </div>
+      </div>
+
+      <div class="level-pill"><span class="dot"></span> Niveau moyen — 100 questions</div>
+      <h1>Test d'Excellence Général</h1>
+      <p class="subtitle">Culture Générale · Français · Anglais · Mathématiques</p>
+
+      <div class="info-panel">
+        <h3>Présentation</h3>
+        <p>Ce test couvre les quatre matières fondamentales selon le programme Lona. Chaque section comporte 25 questions minutieusement sélectionnées.</p>
+        <ul class="subject-list">
+          <li><strong>Culture Générale</strong> — Parcs de la RDC, anciennes appellations, capitales & chefs-lieux, histoire RDC / Afrique / Monde, rivières, lacs, institutions, actualité</li>
+          <li><strong>Français</strong> — Texte long A4 recto-verso, 10 questions de compréhension, 15 questions de vocabulaire, orthographe, grammaire, conjugaison et figures de style</li>
+          <li><strong>Anglais</strong> — Texte original (environnement), 10 questions de compréhension, 15 questions de vocabulaire, conjugaison, grammaire et expressions idiomatiques</li>
+          <li><strong>Mathématiques</strong> — Calcul littéral, polynômes, factorisation, domaines, limites, asymptotes, dérivation, Pythagore & Thalès, vecteurs, trigonométrie, probabilités, logique, suites</li>
+        </ul>
+
+        <h3 style="margin-top:16px">Règles du test</h3>
+        <div class="rule"><span class="icon">⏱</span><span><strong>1 minute</strong> par question — le chrono ne s'arrête pas.</span></div>
+        <div class="rule"><span class="icon">📖</span><span><strong>15 minutes</strong> de lecture par texte. Vous pouvez passer directement aux questions.</span></div>
+        <div class="rule"><span class="icon">📎</span><span>Le texte reste consultable pendant les questions correspondantes (chrono actif uniquement à l'ouverture).</span></div>
+        <div class="rule"><span class="icon">🔒</span><span><strong>Anti-triche strict</strong> — quitter la page arrête immédiatement le test.</span></div>
+        <div class="rule"><span class="icon">📊</span><span>Résultats détaillés avec pourcentages et liste de vos erreurs à la fin.</span></div>
+      </div>
+
+      <p class="wish">🍀 Bonne chance de la part de <strong>Nathan</strong> !</p>
+
+      <button id="btn-start" class="btn primary" style="width:100%;padding:16px;font-size:16px;">Commencer le test</button>
+    </div>
+  </div>
+
+  <!-- ============ TEXT ============ -->
+  <div id="screen-text" class="screen">
+    <div class="card">
+      <div class="text-header">
+        <h2 id="text-title">Lecture</h2>
+        <div class="timer" id="text-timer">15:00</div>
+      </div>
+      <div class="text-content" id="text-content"></div>
+      <div class="text-actions">
+        <button id="btn-skip-text" class="btn secondary">Passer aux questions →</button>
+        <button id="btn-start-questions" class="btn primary">Commencer les questions →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ QUIZ ============ -->
+  <div id="screen-quiz" class="screen">
+    <div class="card">
+      <div class="quiz-header">
+        <div class="section-info">
+          <span class="section-badge" id="quiz-section">Culture Générale</span>
+          <span class="progress-text" id="quiz-progress">Question 1 / 25</span>
+        </div>
+        <div class="timer" id="question-timer">1:00</div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="question" id="question-text"></div>
+      <div class="options" id="options-container"></div>
+      <div class="quiz-actions">
+        <button id="btn-view-text" class="btn secondary" style="display:none;">📖 Voir le texte</button>
+        <button id="btn-next" class="btn primary">Suivant →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL ============ -->
+  <div id="text-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Texte</h3>
+        <div class="timer" id="modal-timer" style="min-width:76px;font-size:13.5px;">15:00</div>
+        <button id="btn-close-modal" class="btn-close">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ============ RESULTS ============ -->
+  <div id="screen-results" class="screen">
+    <div class="card">
+      <div class="brand">
+        <div class="brand-mark">NT</div>
+        <div class="brand-text">
+          <span class="brand-name">Résultats</span>
+          <span class="brand-sub">By N.T</span>
+        </div>
+      </div>
+      <div id="results-summary"></div>
+      <div id="results-errors"></div>
+      <button id="btn-restart" class="btn primary" style="margin-top:28px;width:100%;">Recommencer le test</button>
+    </div>
+  </div>
+
+  <!-- ============ CHEAT ============ -->
+  <div id="screen-cheat" class="screen">
+    <div class="card cheat-card">
+      <h2>🚫 Tricherie détectée</h2>
+      <p>Vous avez quitté la page pendant le test.</p>
+      <p>Conformément aux règles, le test est immédiatement arrêté.</p>
+      <button id="btn-cheat-home" class="btn danger" style="margin-top:20px;">Retour à l'accueil</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ===================== TEXTES ===================== */
+const FRENCH_TEXT = `
+<p>La forêt équatoriale, que l'on appelle parfois le « poumon vert » de la planète, constitue l'un des écosystèmes les plus fascinants et les plus menacés de notre temps. Étendue sur plusieurs millions de kilomètres carrés à travers l'Afrique centrale, l'Amazonie et l'Asie du Sud-Est, elle abrite une biodiversité sans équivalent : des dizaines de milliers d'espèces végétales, des primates rares, des oiseaux aux couleurs éclatantes, des insectes encore inconnus de la science. Ce que l'on découvre chaque année ne représente qu'une infime partie de ce qui reste à explorer.</p>
+
+<p>Or, cette richesse biologique est aujourd'hui gravement compromise. La déforestation, causée principalement par l'exploitation forestière illégale, l'agriculture itinérante et l'extraction minière, progresse à un rythme alarmant. Chaque minute, des superficies équivalentes à plusieurs terrains de football disparaissent. En République démocratique du Congo, deuxième massif forestier tropical du monde après l'Amazonie, la pression est particulièrement intense. Les communautés locales, souvent accusées à tort d'être les principales responsables, ne sont en réalité que les maillons les plus visibles d'une chaîne qui remonte jusqu'aux marchés internationaux.</p>
+
+<p>Les conséquences de cette destruction dépassent largement le cadre régional. Les forêts tropicales jouent un rôle déterminant dans la régulation du climat mondial : elles absorbent d'énormes quantités de dioxyde de carbone et libèrent de l'oxygène. Leur disparition accélère le réchauffement planétaire, perturbe les cycles de pluies et menace la sécurité alimentaire de millions de personnes. Autrement dit, ce qui se joue dans les profondeurs du bassin du Congo concerne directement les habitants de Kinshasa, de Lagos, de Paris ou de Tokyo.</p>
+
+<p>Face à cette situation, plusieurs solutions sont envisageables. La première consiste à renforcer les mécanismes de protection : création de réserves naturelles, formation d'écogardes, sanctions contre les exploitants illégaux. La deuxième repose sur la valorisation économique de la forêt sur pied, notamment par le tourisme durable, la certification du bois et le paiement pour services écosystémiques. La troisième, plus ambitieuse encore, suppose une transformation profonde des modèles de développement : il ne peut y avoir de protection durable sans justice sociale pour les communautés qui vivent de la forêt.</p>
+
+<p>Certains observateurs se montrent pessimistes. Ils rappellent que les engagements internationaux, aussi solennels soient-ils, sont rarement suivis d'effets. Les conférences climatiques se succèdent sans que les émissions diminuent, et les promesses financières demeurent souvent lettre morte. D'autres, au contraire, estiment qu'une prise de conscience mondiale est en marche, portée par la jeunesse, les scientifiques et une partie croissante de l'opinion publique. Selon eux, l'espoir n'est pas naïf : il est une exigence morale.</p>
+
+<p>Quoi qu'il en soit, une chose paraît certaine : la forêt équatoriale n'est pas une ressource inépuisable. Elle est un héritage fragile, transmis par des générations qui l'ont respectée, et que nous avons le devoir de préserver pour celles qui viennent. Il ne s'agit pas seulement de sauver des arbres, ni même des espèces animales : il s'agit de sauver un équilibre dont dépend notre propre survie. C'est peut-être là, au cœur de cette prise de conscience, que se trouve la véritable urgence de notre siècle.</p>
+`;
+
+const ENGLISH_TEXT = `
+<p>Few issues today command as much global attention as climate change. Rising temperatures, melting glaciers, increasingly violent storms, prolonged droughts—the signs of a planet in distress are everywhere. Yet, paradoxically, awareness has never been higher, and the gap between what we know and what we do has never seemed so wide. This contradiction is at the heart of the climate crisis, and understanding it may be the key to overcoming it.</p>
+
+<p>The scientific consensus is now overwhelming. Human activities, particularly the burning of fossil fuels, are driving an unprecedented rise in global temperatures. According to the Intergovernmental Panel on Climate Change, we have already warmed the planet by approximately 1.1 degrees Celsius since pre-industrial times. If current trends continue, we may cross the 1.5-degree threshold within the next two decades—a limit that scientists consider critical for avoiding the most catastrophic consequences.</p>
+
+<p>What makes the crisis so difficult to address is not only its scale but its psychological dimension. Climate change unfolds slowly, its effects felt unevenly across regions and generations. For people in wealthy countries, the consequences often seem distant, abstract, or manageable. For those in poorer regions—including many parts of Africa and South Asia—they are already a daily reality. Droughts ravage crops, floods destroy homes, and rising seas threaten entire coastal communities.</p>
+
+<p>Nevertheless, there are reasons for cautious optimism. Renewable energy has become dramatically cheaper, with solar and wind power now often outperforming coal and gas on purely economic grounds. Electric vehicles are gaining momentum. Youth movements have injected new urgency into political debates. More than one hundred countries have committed to net-zero emissions by mid-century. None of this guarantees success, but it proves that change is possible when the will exists.</p>
+
+<p>Ultimately, the climate crisis is not simply a technical problem. It is a moral and political one. It forces us to confront uncomfortable questions about justice, responsibility, and the kind of world we wish to leave behind. Do we owe anything to strangers on the other side of the planet? To generations not yet born? The answer we give will define not only our environment but our humanity itself.</p>
+`;
+
+/* ===================== QUESTIONS ===================== */
+const QUESTIONS = [
+  /* ---------- CULTURE GÉNÉRALE (25) ---------- */
+  {section:'culture',q:"Quel est le plus grand parc national de la RDC ?",options:["Parc national des Virunga","Parc national de la Salonga","Parc national de Kahuzi-Biega","Parc national de l'Upemba"],correct:1},
+  {section:'culture',q:"Le parc national des Virunga est célèbre pour ses :",options:["Éléphants de forêt","Gorilles de montagne","Bonobos","Okapis"],correct:1},
+  {section:'culture',q:"Le parc national de Kahuzi-Biega est situé dans la province du :",options:["Nord-Kivu","Sud-Kivu","Maniema","Ituri"],correct:1},
+  {section:'culture',q:"Le parc national de l'Upemba se trouve dans la province du :",options:["Haut-Katanga","Lualaba","Haut-Lomami","Tanganyika"],correct:2},
+  {section:'culture',q:"Quel parc est connu pour la protection des okapis ?",options:["Virunga","Salonga","Réserve de faune à okapis (Ituri)","Garamba"],correct:2},
+  {section:'culture',q:"L'ancienne appellation coloniale de Kinshasa était :",options:["Léopoldville","Stanleyville","Élisabethville","Coquilhatville"],correct:0},
+  {section:'culture',q:"L'ancienne appellation coloniale de Lubumbashi était :",options:["Léopoldville","Stanleyville","Élisabethville","Coquilhatville"],correct:2},
+  {section:'culture',q:"L'ancienne appellation coloniale de Kisangani était :",options:["Léopoldville","Stanleyville","Élisabethville","Coquilhatville"],correct:1},
+  {section:'culture',q:"Le chef-lieu de la province du Haut-Katanga est :",options:["Kolwezi","Lubumbashi","Likasi","Kalemie"],correct:1},
+  {section:'culture',q:"Le chef-lieu de la province du Nord-Kivu est :",options:["Bukavu","Goma","Butembo","Beni"],correct:1},
+  {section:'culture',q:"En quelle année la RDC a-t-elle accédé à l'indépendance ?",options:["1958","1960","1965","1971"],correct:1},
+  {section:'culture',q:"Quel nom la RDC a-t-elle porté de 1971 à 1997 ?",options:["République du Congo","Zaïre","République Populaire du Congo","Congo belge"],correct:1},
+  {section:'culture',q:"Le premier Président de la RDC était :",options:["Patrice Lumumba","Joseph Kasa-Vubu","Mobutu Sese Seko","Laurent-Désiré Kabila"],correct:1},
+  {section:'culture',q:"Quelle est la date de la Journée de l'Afrique ?",options:["25 mai","30 juin","1er juillet","26 décembre"],correct:0},
+  {section:'culture',q:"Quel pays africain a été le premier indépendant en 1957 ?",options:["Le Ghana","La Guinée","Le Sénégal","Le Nigeria"],correct:0},
+  {section:'culture',q:"Quel empire africain fut dirigé par Soundiata Keïta ?",options:["Empire du Ghana","Empire du Mali","Empire Songhaï","Empire du Monomotapa"],correct:1},
+  {section:'culture',q:"La Seconde Guerre mondiale a pris fin en :",options:["1943","1944","1945","1946"],correct:2},
+  {section:'culture',q:"Le mur de Berlin est tombé en :",options:["1987","1989","1991","1993"],correct:1},
+  {section:'culture',q:"Quel est le plus long fleuve d'Afrique ?",options:["Le Congo","Le Nil","Le Niger","Le Zambèze"],correct:1},
+  {section:'culture',q:"Le lac le plus profond d'Afrique est :",options:["Le lac Victoria","Le lac Tanganyika","Le lac Kivu","Le lac Albert"],correct:1},
+  {section:'culture',q:"Quel lac est situé entre la RDC et le Rwanda ?",options:["Lac Albert","Lac Kivu","Lac Édouard","Lac Tanganyika"],correct:1},
+  {section:'culture',q:"Quelle institution est chargée de la protection des parcs en RDC ?",options:["ICCN","CENI","FEC","ANAPI"],correct:0},
+  {section:'culture',q:"Le siège de l'Union africaine se trouve à :",options:["Addis-Abeba","Johannesburg","Le Caire","Abuja"],correct:0},
+  {section:'culture',q:"Combien de provinces compte la RDC depuis 2015 ?",options:["11","21","26","30"],correct:2},
+  {section:'culture',q:"Quel organisme organise le test national Excellentia RDC ?",options:["La Fondation Lona et le ministère de l'ESU","L'UNESCO","La Banque mondiale","L'Union africaine"],correct:0},
+
+  /* ---------- FRANÇAIS (25) ---------- */
+  {section:'francais',q:"Quelle est la thèse principale de l'auteur ?",options:["La forêt équatoriale est inépuisable","La forêt équatoriale est un héritage fragile à préserver","Les communautés locales sont responsables","Le tourisme est inutile"],correct:1},
+  {section:'francais',q:"Selon l'auteur, qui sont les vrais responsables de la déforestation ?",options:["Les communautés locales uniquement","Les chaînes qui remontent aux marchés internationaux","Les scientifiques","Les touristes"],correct:1},
+  {section:'francais',q:"Quel rôle jouent les forêts tropicales selon le texte ?",options:["Régulation du climat mondial","Production de pétrole","Extraction minière","Urbanisation"],correct:0},
+  {section:'francais',q:"Que veut dire l'expression « lettre morte » ?",options:["Une lettre perdue","Un engagement sans effet réel","Une lettre anonyme","Un texte sacré"],correct:1},
+  {section:'francais',q:"Quelle est l'attitude de l'auteur face à l'avenir ?",options:["Optimiste naïf","Pessimiste radical","Nuancé — entre pessimisme et espoir","Indifférent"],correct:2},
+  {section:'francais',q:"Dans « Ce que l'on découvre chaque année », « que » est un pronom :",options:["Relatif","Démonstratif","Possessif","Personnel"],correct:0},
+  {section:'francais',q:"Le préfixe « dé- » dans « déforestation » exprime :",options:["Une répétition","Une privation","Une intensité","Une opposition"],correct:1},
+  {section:'francais',q:"Quel est le sens de « alarmant » ?",options:["Rassurant","Qui provoque l'inquiétude","Neutre","Temporaire"],correct:1},
+  {section:'francais',q:"L'antonyme de « durable » est :",options:["Solide","Éphémère","Long","Stable"],correct:1},
+  {section:'francais',q:"Dans « Ce qui se joue dans les profondeurs », « se joue » a un sens :",options:["Ludique","Décisif","Musical","Théâtral uniquement"],correct:1},
+  {section:'francais',q:"Orthographe correcte :",options:["Dévelopement","Développement","Développement","Développement"],correct:1},
+  {section:'francais',q:"Orthographe correcte :",options:["Environement","Environnement","Environement","Environement"],correct:1},
+  {section:'francais',q:"Orthographe correcte :",options:["Comité","Comitté","Comitée","Comitte"],correct:0},
+  {section:'francais',q:"Accord correct :",options:["Les forêts que j'ai vu","Les forêts que j'ai vues","Les forêts que j'ai vue","Les forêts que j'ai vus"],correct:1},
+  {section:'francais',q:"Quel est le temps de « elle sera partie » ?",options:["Futur simple","Futur antérieur","Conditionnel","Passé composé"],correct:1},
+  {section:'francais',q:"Quel est le temps de « qu'il fût » ?",options:["Imparfait","Subjonctif imparfait","Passé simple","Futur"],correct:1},
+  {section:'francais',q:"La forme correcte du subjonctif présent de « faire » :",options:["Que je fasse","Que je fais","Que je ferai","Que je fis"],correct:0},
+  {section:'francais',q:"La figure de style dans « cette obscure clarté » est :",options:["Oxymore","Hyperbole","Métaphore","Litote"],correct:0},
+  {section:'francais',q:"La figure de style dans « je meurs de faim » :",options:["Litote","Hyperbole","Oxymore","Personnification"],correct:1},
+  {section:'francais',q:"La figure de style dans « le vent hurle » :",options:["Comparaison","Personnification","Métonymie","Hyperbole"],correct:1},
+  {section:'francais',q:"La figure de style dans « boire un verre » :",options:["Métaphore","Métonymie","Hyperbole","Litote"],correct:1},
+  {section:'francais',q:"La figure de style dans « Il n'est pas bête » :",options:["Litote","Hyperbole","Oxymore","Euphémisme"],correct:0},
+  {section:'francais',q:"La figure de style dans « Je l'ai vu de mes propres yeux » :",options:["Pléonasme","Oxymore","Métaphore","Litote"],correct:0},
+  {section:'francais',q:"La figure de style dans « Rome ne s'est pas faite en un jour » :",options:["Proverbe","Oxymore","Hyperbole","Litote"],correct:0},
+  {section:'francais',q:"La figure de style dans « une mer de flammes » :",options:["Métaphore","Comparaison","Litote","Euphémisme"],correct:0},
+
+  /* ---------- ANGLAIS (25) ---------- */
+  {section:'anglais',q:"What is the main topic of the passage?",options:["Education","Climate change","Technology","Sports"],correct:1},
+  {section:'anglais',q:"According to the passage, what is the current global temperature rise since pre-industrial times?",options:["0.5°C","1.1°C","2°C","3°C"],correct:1},
+  {section:'anglais',q:"What limit do scientists consider critical?",options:["1°C","1.5°C","2°C","3°C"],correct:1},
+  {section:'anglais',q:"What is described as paradoxical in the text?",options:["The rise of temperatures","The gap between awareness and action","The melting of glaciers","The cost of renewables"],correct:1},
+  {section:'anglais',q:"What makes climate change difficult to address psychologically?",options:["Its speed","Its slow and uneven effects","Its complexity","Its cost"],correct:1},
+  {section:'anglais',q:"What gives reasons for cautious optimism?",options:["Cheaper renewable energy","More fossil fuels","Less awareness","Slower technology"],correct:0},
+  {section:'anglais',q:"How many countries have committed to net-zero emissions?",options:["About 20","About 50","More than 100","More than 200"],correct:2},
+  {section:'anglais',q:"What is the crisis ultimately described as?",options:["A technical problem only","A moral and political problem","A regional issue","An economic issue only"],correct:1},
+  {section:'anglais',q:"The word “catastrophic” most nearly means:",options:["Beneficial","Disastrous","Minor","Neutral"],correct:1},
+  {section:'anglais',q:"What does the author imply about responsibility?",options:["Only governments are responsible","Only individuals are responsible","Responsibility is collective and intergenerational","No one is responsible"],correct:2},
+  {section:'anglais',q:"“She ___ to school every day.” (Present Simple)",options:["go","goes","going","gone"],correct:1},
+  {section:'anglais',q:"“They ___ football at the moment.” (Present Continuous)",options:["play","plays","are playing","played"],correct:2},
+  {section:'anglais',q:"“I ___ to London last year.” (Past Simple)",options:["go","went","gone","going"],correct:1},
+  {section:'anglais',q:"“He ___ TV when I called.” (Past Continuous)",options:["watches","watched","was watching","is watching"],correct:2},
+  {section:'anglais',q:"“I ___ already ___ that film.” (Present Perfect)",options:["have / seen","has / seen","had / saw","am / seeing"],correct:0},
+  {section:'anglais',q:"“Tomorrow, I ___ my homework.” (Future)",options:["do","did","will do","doing"],correct:2},
+  {section:'anglais',q:"Modal for obligation: “You ___ wear a seatbelt.”",options:["may","could","must","might"],correct:2},
+  {section:'anglais',q:"Conditional type 1: “If it rains, I ___ at home.”",options:["stay","will stay","stayed","would stay"],correct:1},
+  {section:'anglais',q:"Comparative: “This book is ___ than that one.”",options:["good","better","best","more good"],correct:1},
+  {section:'anglais',q:"Superlative: “She is ___ student in the class.”",options:["the most intelligent","more intelligent","intelligenter","most intelligent"],correct:0},
+  {section:'anglais',q:"Article: “___ elephant is large.”",options:["A","An","The","(nothing)"],correct:1},
+  {section:'anglais',q:"WH-question: “___ do you live?”",options:["What","Where","When","Who"],correct:1},
+  {section:'anglais',q:"Idiom: “To bite the bullet” means:",options:["To eat quickly","To endure pain with courage","To avoid danger","To speak aggressively"],correct:1},
+  {section:'anglais',q:"Idiom: “To break the ice” means:",options:["To break something cold","To initiate conversation in a tense situation","To make a mistake","To end a friendship"],correct:1},
+  {section:'anglais',q:"Idiom: “To hit the nail on the head” means:",options:["To hurt someone","To identify the exact truth","To build something","To miss the point"],correct:1},
+
+  /* ---------- MATHÉMATIQUES (25) ---------- */
+  {section:'maths',q:"Simplifier : (2x + 4) / 2",options:["x + 4","x + 2","2x + 2","x + 1"],correct:1},
+  {section:'maths',q:"Développer : (x + 3)²",options:["x² + 9","x² + 6x + 9","x² + 3x + 9","x² + 6"],correct:1},
+  {section:'maths',q:"Factoriser : x² − 16",options:["(x − 4)(x + 4)","(x − 4)²","(x + 4)²","(x − 16)(x + 1)"],correct:0},
+  {section:'maths',q:"Étudier le signe de x² − 9 sur ℝ :",options:["Positif partout","Négatif sur ]−3, 3[ et positif à l'extérieur","Toujours négatif","Positif uniquement en 0"],correct:1},
+  {section:'maths',q:"Condition d'existence de 1/(x − 5) :",options:["x ≠ 0","x ≠ 5","x > 5","x ≥ 5"],correct:1},
+  {section:'maths',q:"Domaine de définition de f(x) = √(x + 2) :",options:["[−2, +∞[","]−2, +∞[","]−∞, −2]","ℝ"],correct:0},
+  {section:'maths',q:"lim(x→+∞) (3x² + x)/(x² + 5) vaut :",options:["0","1","3","+∞"],correct:2},
+  {section:'maths',q:"La fonction f(x) = 1/(x − 4) a une asymptote verticale en :",options:["x = 0","x = 4","x = −4","y = 0"],correct:1},
+  {section:'maths',q:"La dérivée de f(x) = x³ est :",options:["x²","3x²","3x","x³/3"],correct:1},
+  {section:'maths',q:"Si f'(x) change de signe de + à − en a, alors f admet en a :",options:["Un minimum","Un maximum","Un point d'inflexion","Une asymptote"],correct:1},
+  {section:'maths',q:"La fonction f(x) = |x| est :",options:["Paire","Impaire","Ni paire ni impaire","Constante"],correct:0},
+  {section:'maths',q:"Théorème de Pythagore : si les côtés de l'angle droit mesurent 3 et 4, l'hypoténuse vaut :",options:["5","6","7","25"],correct:0},
+  {section:'maths',q:"Théorème de Thalès s'applique lorsque :",options:["Deux droites sont parallèles coupées par deux sécantes","Un triangle est équilatéral","Deux droites sont perpendiculaires","Un cercle est inscrit"],correct:0},
+  {section:'maths',q:"Le vecteur AB avec A(1,2) et B(4,6) a pour coordonnées :",options:["(3, 4)","(5, 8)","(−3, −4)","(4, 3)"],correct:0},
+  {section:'maths',q:"La norme du vecteur (3, 4) est :",options:["5","7","12","25"],correct:0},
+  {section:'maths',q:"cos(60°) vaut :",options:["0","1/2","√3/2","1"],correct:1},
+  {section:'maths',q:"sin(30°) vaut :",options:["0","1/2","√3/2","1"],correct:1},
+  {section:'maths',q:"tan(45°) vaut :",options:["0","1","√3","Indéfini"],correct:1},
+  {section:'maths',q:"La probabilité d'obtenir un 6 en lançant un dé équilibré est :",options:["1/2","1/3","1/6","1/12"],correct:2},
+  {section:'maths',q:"En lançant deux pièces, la probabilité d'obtenir deux faces est :",options:["1/2","1/3","1/4","1/8"],correct:2},
+  {section:'maths',q:"L'implication « P ⇒ Q » est fausse lorsque :",options:["P est vrai et Q est faux","P est faux et Q est vrai","P est vrai et Q est vrai","P est faux et Q est faux"],correct:0},
+  {section:'maths',q:"« P ⇔ Q » signifie :",options:["P implique Q","Q implique P","P si et seulement si Q","Ni P ni Q"],correct:2},
+  {section:'maths',q:"« Condition nécessaire » pour Q signifie :",options:["P ⇒ Q","Q ⇒ P","P et Q","Ni P ni Q"],correct:1},
+  {section:'maths',q:"Une suite arithmétique de premier terme u₀ = 2 et de raison 3 : u₅ vaut :",options:["15","17","18","20"],correct:1},
+  {section:'maths',q:"Une suite géométrique de premier terme u₀ = 3 et de raison 2 : u₄ vaut :",options:["24","32","48","64"],correct:2}
+];
+
+/* ===================== SECTIONS ===================== */
+const SECTIONS = [
+  {id:'culture', name:'Culture Générale', text:null},
+  {id:'francais', name:'Français', text:FRENCH_TEXT},
+  {id:'anglais', name:'Anglais', text:ENGLISH_TEXT},
+  {id:'maths', name:'Mathématiques', text:null}
+];
+
+const ALL_QUESTIONS = [];
+SECTIONS.forEach((section, sIdx) => {
+  const list = QUESTIONS.filter(q => q.section === section.id);
+  list.forEach((q, qIdx) => {
+    ALL_QUESTIONS.push(Object.assign({}, q, {
+      sectionId: section.id,
+      sectionName: section.name,
+      sectionIndex: sIdx,
+      questionInSection: qIdx,
+      totalInSection: list.length,
+      globalIndex: ALL_QUESTIONS.length
+    }));
+  });
+});
+
+/* ===================== ÉTAT ===================== */
+const state = {
+  testActive:false,
+  cheated:false,
+  currentGlobalIdx:0,
+  answers:new Array(ALL_QUESTIONS.length).fill(null),
+  questionTimer:null,
+  questionTimeLeft:60,
+  textBudget:{francais:900, anglais:900},
+  textScreenTimer:null,
+  textScreenActive:false,
+  modalTimer:null,
+  modalOpen:false,
+  currentTextSection:null,
+  currentPhase:'home'
+};
+
+/* ===================== UTILITAIRES ===================== */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function formatTime(sec){
+  if (sec < 0) sec = 0;
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return m + ':' + String(s).padStart(2, '0');
+}
+function updateQuestionTimer(){
+  const el = document.getElementById('question-timer');
+  el.textContent = formatTime(state.questionTimeLeft);
+  el.classList.toggle('danger', state.questionTimeLeft <= 10);
+}
+function updateTextScreenTimer(){
+  const sec = state.textBudget[state.currentTextSection];
+  const el = document.getElementById('text-timer');
+  el.textContent = formatTime(sec);
+  el.classList.toggle('danger', sec <= 30);
+}
+function updateModalTimer(){
+  const sec = state.textBudget[state.currentTextSection];
+  const el = document.getElementById('modal-timer');
+  el.textContent = formatTime(sec);
+  el.classList.toggle('danger', sec <= 30);
+}
+
+/* ===================== FLUX ===================== */
+function startTest(){
+  state.testActive = true;
+  state.cheated = false;
+  state.currentGlobalIdx = 0;
+  state.answers = new Array(ALL_QUESTIONS.length).fill(null);
+  state.textBudget = {francais:900, anglais:900};
+
+  const firstQ = ALL_QUESTIONS[0];
+  const section = SECTIONS[firstQ.sectionIndex];
+  if (section.text){
+    showTextScreen(firstQ.sectionIndex);
+  } else {
+    showQuizScreen();
+  }
+  activateAntiCheat();
+}
+
+function showTextScreen(sectionIdx){
+  state.currentPhase = 'text';
+  state.currentTextSection = SECTIONS[sectionIdx].id;
+  const section = SECTIONS[sectionIdx];
+  document.getElementById('text-title').textContent = 'Lecture — ' + section.name;
+  document.getElementById('text-content').innerHTML = section.text;
+  showScreen('screen-text');
+
+  state.textScreenActive = true;
+  updateTextScreenTimer();
+
+  if (state.textScreenTimer) clearInterval(state.textScreenTimer);
+  state.textScreenTimer = setInterval(() => {
+    if (!state.textScreenActive || !state.testActive) return;
+    state.textBudget[state.currentTextSection]--;
+    updateTextScreenTimer();
+    if (state.textBudget[state.currentTextSection] <= 0){
+      clearInterval(state.textScreenTimer);
+      state.textScreenTimer = null;
+      startSectionQuestions(state.currentTextSection);
+    }
+  }, 1000);
+}
+
+function startSectionQuestions(sectionId){
+  state.textScreenActive = false;
+  if (state.textScreenTimer){ clearInterval(state.textScreenTimer); state.textScreenTimer = null; }
+  const sectionIdx = SECTIONS.findIndex(s => s.id === sectionId);
+  const idx = ALL_QUESTIONS.findIndex(q => q.sectionIndex === sectionIdx);
+  if (idx >= 0){
+    state.currentGlobalIdx = idx;
+    showQuizScreen();
+  } else {
+    finishTest();
+  }
+}
+
+function showQuizScreen(){
+  state.currentPhase = 'quiz';
+  showScreen('screen-quiz');
+  loadQuestion();
+}
+
+function loadQuestion(){
+  const q = ALL_QUESTIONS[state.currentGlobalIdx];
+  document.getElementById('quiz-section').textContent = q.sectionName;
+  document.getElementById('quiz-progress').textContent =
+    'Question ' + (q.questionInSection + 1) + ' / ' + q.totalInSection;
+  document.getElementById('question-text').textContent = q.q;
+
+  const progress = ((state.currentGlobalIdx + 1) / ALL_QUESTIONS.length) * 100;
+  document.getElementById('progress-fill').style.width = progress + '%';
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = '<span class="letter">' + String.fromCharCode(65 + i) + '.</span><span>' + opt + '</span>';
+    btn.addEventListener('click', () => selectOption(i));
+    if (state.answers[state.currentGlobalIdx] === i) btn.classList.add('selected');
+    container.appendChild(btn);
+  });
+
+  const section = SECTIONS[q.sectionIndex];
+  const btnText = document.getElementById('btn-view-text');
+  if (section.text){
+    const remaining = state.textBudget[section.id];
+    if (remaining > 0){
+      btnText.style.display = 'inline-flex';
+      btnText.disabled = false;
+      btnText.textContent = '📖 Voir le texte (' + formatTime(remaining) + ')';
+      btnText.onclick = () => openTextModal(section);
+    } else {
+      btnText.style.display = 'inline-flex';
+      btnText.disabled = true;
+      btnText.textContent = '📖 Temps du texte épuisé';
+      btnText.onclick = null;
+    }
+  } else {
+    btnText.style.display = 'none';
+  }
+
+  state.questionTimeLeft = 60;
+  updateQuestionTimer();
+  if (state.questionTimer) clearInterval(state.questionTimer);
+  state.questionTimer = setInterval(() => {
+    if (!state.testActive) return;
+    state.questionTimeLeft--;
+    updateQuestionTimer();
+    if (state.questionTimeLeft <= 0){
+      clearInterval(state.questionTimer);
+      state.questionTimer = null;
+      nextQuestion();
+    }
+  }, 1000);
+}
+
+function selectOption(i){
+  state.answers[state.currentGlobalIdx] = i;
+  document.querySelectorAll('.option').forEach((btn, idx) => {
+    btn.classList.toggle('selected', idx === i);
+  });
+}
+
+function nextQuestion(){
+  if (state.questionTimer){ clearInterval(state.questionTimer); state.questionTimer = null; }
+  closeTextModal();
+  const currentQ = ALL_QUESTIONS[state.currentGlobalIdx];
+  const nextIdx = state.currentGlobalIdx + 1;
+  if (nextIdx >= ALL_QUESTIONS.length){
+    finishTest();
+    return;
+  }
+  const nextQ = ALL_QUESTIONS[nextIdx];
+  state.currentGlobalIdx = nextIdx;
+  if (nextQ.sectionIndex !== currentQ.sectionIndex){
+    const nextSection = SECTIONS[nextQ.sectionIndex];
+    if (nextSection.text){
+      showTextScreen(nextQ.sectionIndex);
+      return;
+    }
+  }
+  loadQuestion();
+}
+
+/* ===================== MODAL ===================== */
+function openTextModal(section){
+  state.currentTextSection = section.id;
+  document.getElementById('modal-title').textContent = 'Texte — ' + section.name;
+  document.getElementById('modal-body').innerHTML = section.text;
+  document.getElementById('text-modal').classList.add('open');
+  updateModalTimer();
+
+  state.modalOpen = true;
+  if (state.modalTimer) clearInterval(state.modalTimer);
+  state.modalTimer = setInterval(() => {
+    if (!state.modalOpen || !state.testActive) return;
+    state.textBudget[state.currentTextSection]--;
+    updateModalTimer();
+    const btn = document.getElementById('btn-view-text');
+    if (btn && SECTIONS[ALL_QUESTIONS[state.currentGlobalIdx].sectionIndex].text){
+      btn.textContent = '📖 Voir le texte (' + formatTime(state.textBudget[state.currentTextSection]) + ')';
+    }
+    if (state.textBudget[state.currentTextSection] <= 0){
+      closeTextModal();
+      loadQuestion();
+    }
+  }, 1000);
+}
+
+function closeTextModal(){
+  state.modalOpen = false;
+  if (state.modalTimer){ clearInterval(state.modalTimer); state.modalTimer = null; }
+  document.getElementById('text-modal').classList.remove('open');
+}
+
+/* ===================== ANTI-TRICHE ===================== */
+let antiCheatBound = false;
+function activateAntiCheat(){
+  if (antiCheatBound) return;
+  antiCheatBound = true;
+  document.addEventListener('visibilitychange', () => {
+    if (state.testActive && !state.cheated && document.hidden) triggerCheat();
+  });
+  window.addEventListener('blur', () => {
+    if (state.testActive && !state.cheated){
+      setTimeout(() => {
+        if (state.testActive && !state.cheated && !document.hasFocus()) triggerCheat();
+      }, 200);
+    }
+  });
+}
+
+function triggerCheat(){
+  state.cheated = true;
+  state.testActive = false;
+  state.textScreenActive = false;
+  state.modalOpen = false;
+  if (state.questionTimer){ clearInterval(state.questionTimer); state.questionTimer = null; }
+  if (state.textScreenTimer){ clearInterval(state.textScreenTimer); state.textScreenTimer = null; }
+  if (state.modalTimer){ clearInterval(state.modalTimer); state.modalTimer = null; }
+  closeTextModal();
+  showScreen('screen-cheat');
+}
+
+/* ===================== RÉSULTATS ===================== */
+function finishTest(){
+  state.testActive = false;
+  state.currentPhase = 'results';
+  state.textScreenActive = false;
+  state.modalOpen = false;
+  if (state.questionTimer){ clearInterval(state.questionTimer); state.questionTimer = null; }
+  if (state.textScreenTimer){ clearInterval(state.textScreenTimer); state.textScreenTimer = null; }
+  if (state.modalTimer){ clearInterval(state.modalTimer); state.modalTimer = null; }
+  closeTextModal();
+
+  const sectionScores = {};
+  SECTIONS.forEach(s => { sectionScores[s.id] = {correct:0, total:0, name:s.name}; });
+  const errors = [];
+  ALL_QUESTIONS.forEach((q, i) => {
+    const answer = state.answers[i];
+    sectionScores[q.sectionId].total++;
+    if (answer === q.correct){
+      sectionScores[q.sectionId].correct++;
+    } else {
+      errors.push({question:q, given:answer});
+    }
+  });
+
+  let totalCorrect = 0;
+  const totalQuestions = ALL_QUESTIONS.length;
+
+  let summaryHtml = '<div class="results-grid">';
+  SECTIONS.forEach(s => {
+    const sc = sectionScores[s.id];
+    totalCorrect += sc.correct;
+    const pct = Math.round((sc.correct / sc.total) * 100);
+    summaryHtml +=
+      '<div class="result-card">' +
+        '<h3>' + sc.name + '</h3>' +
+        '<div class="result-score">' + sc.correct + '/' + sc.total + '</div>' +
+        '<div class="result-pct">' + pct + '%</div>' +
+      '</div>';
+  });
+  summaryHtml += '</div>';
+
+  const totalPct = Math.round((totalCorrect / totalQuestions) * 100);
+  summaryHtml +=
+    '<div class="total-result">' +
+      '<h3>Score Total</h3>' +
+      '<div class="total-score">' + totalCorrect + '/' + totalQuestions + '</div>' +
+      '<div class="total-pct">' + totalPct + '%</div>' +
+    '</div>';
+
+  document.getElementById('results-summary').innerHTML = summaryHtml;
+
+  let errorsHtml = '<h2 style="margin-bottom:14px;font-size:18px">Détail des erreurs</h2>';
+  if (errors.length === 0){
+    errorsHtml += '<div class="no-errors">🎉 Aucune erreur — Excellent travail !</div>';
+  } else {
+    errorsHtml += '<div class="errors-list">';
+    errors.forEach(e => {
+      const q = e.question;
+      const givenText = (e.given === null)
+        ? '<em>Non répondu (temps écoulé)</em>'
+        : String.fromCharCode(65 + e.given) + '. ' + q.options[e.given];
+      const correctText = String.fromCharCode(65 + q.correct) + '. ' + q.options[q.correct];
+      errorsHtml +=
+        '<div class="error-item">' +
+          '<div class="error-header">' +
+            '<span class="error-section">' + q.sectionName + '</span>' +
+            '<span class="error-num">Q' + (q.questionInSection + 1) + '</span>' +
+          '</div>' +
+          '<div class="error-question">' + q.q + '</div>' +
+          '<div class="error-answer">' +
+            '<span class="given">❌ Votre réponse : ' + givenText + '</span>' +
+            '<span class="correct">✅ Bonne réponse : ' + correctText + '</span>' +
+          '</div>' +
+        '</div>';
+    });
+    errorsHtml += '</div>';
+  }
+  document.getElementById('results-errors').innerHTML = errorsHtml;
+  showScreen('screen-results');
+}
+
+/* ===================== RESET ===================== */
+function resetToHome(){
+  state.testActive = false;
+  state.cheated = false;
+  state.currentGlobalIdx = 0;
+  state.answers = new Array(ALL_QUESTIONS.length).fill(null);
+  state.textBudget = {francais:900, anglais:900};
+  state.currentPhase = 'home';
+  state.textScreenActive = false;
+  state.modalOpen = false;
+  if (state.questionTimer){ clearInterval(state.questionTimer); state.questionTimer = null; }
+  if (state.textScreenTimer){ clearInterval(state.textScreenTimer); state.textScreenTimer = null; }
+  if (state.modalTimer){ clearInterval(state.modalTimer); state.modalTimer = null; }
+  closeTextModal();
+  showScreen('screen-home');
+}
+
+/* ===================== ÉVÉNEMENTS ===================== */
+document.getElementById('btn-start').addEventListener('click', startTest);
+document.getElementById('btn-skip-text').addEventListener('click', () => startSectionQuestions(state.currentTextSection));
+document.getElementById('btn-start-questions').addEventListener('click', () => startSectionQuestions(state.currentTextSection));
+document.getElementById('btn-next').addEventListener('click', nextQuestion);
+document.getElementById('btn-close-modal').addEventListener('click', closeTextModal);
+document.getElementById('btn-restart').addEventListener('click', () => {
+  if (confirm('Recommencer le test depuis le début ?')) resetToHome();
+});
+document.getElementById('btn-cheat-home').addEventListener('click', resetToHome);
+document.getElementById('text-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'text-modal') closeTextModal();
+});
+</script>
+</body>
+</html>
